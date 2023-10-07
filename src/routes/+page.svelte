@@ -1,2 +1,8 @@
-<h1>Welcome to SvelteKit</h1>
-<h2>Test github pages deployment</h2>
+<script lang="ts">
+    import { base } from '$app/paths';
+</script>
+
+<nav>
+    <a href="{base}/print">Create print</a>
+    <a href="{base}/read">Read print</a>
+</nav>
