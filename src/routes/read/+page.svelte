@@ -1,7 +1,68 @@
 <script lang="ts">
-    import { base } from '$app/paths';
+    import {Html5Qrcode, type Html5QrcodeResult} from 'html5-qrcode'
+    import { onMount } from 'svelte'
+    import {base} from "$app/paths";
+
+    let scanning = false
+
+    let html5Qrcode: Html5Qrcode
+
+    onMount(init)
+
+    function init() {
+        html5Qrcode = new Html5Qrcode('reader')
+    }
+
+    function start() {
+        html5Qrcode.start(
+            { facingMode: 'environment' },
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+            },
+            onScanSuccess,
+            onScanFailure
+        )
+        scanning = true
+    }
+
+    async function stop() {
+        await html5Qrcode.stop()
+        scanning = false
+    }
+
+    function onScanSuccess(decodedText: string, decodedResult: Html5QrcodeResult) {
+        alert(`Code matched = ${decodedText}`)
+        console.log(decodedResult)
+    }
+
+    function onScanFailure(error: string) {
+        console.warn(`Code scan error = ${error}`)
+    }
 </script>
 
-<h1>Read page</h1>
-<p>TODO...</p>
-<a href="{base}/">Start page</a>
+<style>
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+    reader {
+        width: 100%;
+        min-height: 500px;
+        background-color: black;
+    }
+</style>
+
+<main>
+    <reader id="reader"/>
+    {#if scanning}
+        <button on:click={stop}>stop</button>
+    {:else}
+        <button on:click={start}>start</button>
+    {/if}
+
+    <a href="{base}/">Start page</a>
+</main>
