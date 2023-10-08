@@ -1,7 +1,6 @@
 <script lang="ts">
     import {Html5Qrcode, type Html5QrcodeResult} from 'html5-qrcode'
     import { onMount } from 'svelte'
-    import {base} from "$app/paths";
     import CryptoES from "crypto-es";
     import SaltInput from "$lib/components/SaltInput.svelte";
 
