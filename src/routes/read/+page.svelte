@@ -4,7 +4,7 @@
     import {base} from "$app/paths";
     import CryptoES from "crypto-es";
 
-    let scanning = false
+    $: scanning = false
 
     let html5Qrcode: Html5Qrcode
 
@@ -21,17 +21,17 @@
     }
 
     function start() {
-
+        scanning = true
         html5Qrcode.start(
             { facingMode: 'environment' },
             {
-                fps: 10,
+                fps: 5,
                 qrbox: { width: 250, height: 250 },
             },
             onScanSuccess,
             onScanFailure
         )
-        scanning = true
+
     }
 
     async function stop() {
@@ -47,7 +47,6 @@
 
     function onScanFailure(error: string) {
         console.warn(`Code scan error = ${error}`)
-        scanning = false;
     }
 
     function decrypt_aes() {
@@ -71,9 +70,8 @@
 </style>
 
 <main>
-    {#if scanning}
-           <reader id="reader"/>
-    {/if}
+
+    <reader hidden="{!scanning}" id="reader"/>
     {#if scanning}
         <button on:click={stop}>stop</button>
     {:else}
