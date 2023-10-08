@@ -3,8 +3,9 @@
     import { onMount } from 'svelte'
     import {base} from "$app/paths";
     import CryptoES from "crypto-es";
+    import SaltInput from "$lib/components/SaltInput.svelte";
 
-    $: scanning = false
+    let scanning = false
 
     let html5Qrcode: Html5Qrcode
 
@@ -52,6 +53,9 @@
     function decrypt_aes() {
         decrypted_data = CryptoES.AES.decrypt(scanned_data, key).toString(CryptoES.enc.Utf8);
     }
+
+    let use_salt: boolean = false;
+    let salt: string = "";
 </script>
 
 <style>
@@ -70,7 +74,6 @@
 </style>
 
 <main>
-
     <reader hidden="{!scanning}" id="reader"/>
     {#if scanning}
         <button on:click={stop}>stop</button>
@@ -83,11 +86,10 @@
 
     {#if key}
         <button on:click={decrypt_aes}>Decrypt</button>
+        <SaltInput bind:use_salt={use_salt} bind:salt={salt}/>
     {/if}
 
     {#if decrypted_data}
         <p>{decrypted_data}</p>
     {/if}
-
-    <a href="{base}/">Start page</a>
 </main>
